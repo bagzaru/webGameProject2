@@ -11,7 +11,22 @@
 // });
 let io = require('socket.io')(9999);
 
+let ids=[];
+let i=0;
 io.on('connection',(client)=>{
-    console.log("클라이언트가 연결되었습니다.");
-    console.log(`${client.id}`);
+    console.log(`클라이언트 : ${client.id}`);
+    ids[i]=client.id;
+    io.emit('id check',{message:ids[i], num:i});
+    client.on('on chat',(a)=>{
+        io.emit('on chat',{
+        message : a.message,
+        name : a.name
+        })
+    });
+    client.on('join',(a)=>{
+        io.emit('join',{
+        name : a.myname
+        })
+    });
+    i++;
 })
